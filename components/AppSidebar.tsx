@@ -1,4 +1,7 @@
+'use client';
+
 import { Home, Users, MessagesSquare, ChartLine } from "lucide-react";
+import { useState } from "react";
 
 import Link from "next/link";
 
@@ -15,6 +18,7 @@ import {
   SidebarFooter,
   SidebarSeparator,
   SidebarRail,
+  SidebarTrigger
 } from "@/components/ui/sidebar";
 
 // Menu items.
@@ -42,11 +46,19 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const [collapsed, setIsCollapsed] = useState(false);
+
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="text-2xl font-bold text-blue-400">
-        EchoHealth
-      </SidebarHeader>
+      <div className="flex justify-between items-center mr-3">
+        <SidebarHeader className="text-2xl font-bold text-blue-400">
+            EchoHealth
+          </SidebarHeader>
+          <SidebarTrigger/>
+      </div>
+      
+      
       <SidebarSeparator />
       <SidebarContent>
         <SidebarGroup>
