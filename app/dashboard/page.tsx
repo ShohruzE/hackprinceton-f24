@@ -5,46 +5,40 @@ export default function DashboardHomePage() {
     const response = await fetch("/api/summary", {
       method: "POST",
       body: JSON.stringify({
-        text: `patient: ive been feeling a lot of pain in my lower back lately it started maybe three days ago
+        text: `nurse: good morning how are you feeling today
 
-nurse: i see has the pain been constant or does it come and go
+patient: good morning ive been feeling a little lightheaded and out of breath
 
-patient: it comes and goes mostly when im moving around too much but sitting still helps a bit
+nurse: i see lets check a few things can you tell me if youve had any pain or discomfort
 
-nurse: ok any other symptoms you’ve noticed alongside the pain like tingling numbness or fever
+patient: just a bit of chest tightness nothing severe but it’s noticeable especially when i move around a lot
 
-patient: not really no fever or anything but sometimes i feel like a slight tingling sensation down my right leg
+nurse: understood and just for documentation i’m going to note your vitals i see here that your blood pressure is 120 over 80
 
-nurse: got it and what would you rate the pain on a scale from one to ten with ten being the worst pain imaginable
+patient: yes that was from this morning when they checked me in
 
-patient: id say around a seven when im moving but when im sitting it drops to maybe a three
+nurse: alright and your heart rate is currently at 85 bpm do you remember what it was earlier
 
-nurse: alright have you taken any medications or tried any remedies for the pain
+patient: no but i remember them mentioning it was around 80
 
-patient: yeah ive been taking ibuprofen about twice a day and it helps for a few hours
+nurse: ok and your temperature is normal at 98.6 degrees
 
-nurse: thank you for sharing this is helpful is there anything specific you would like addressed or any questions you have about your treatment
+patient: thats good to know
 
-patient: yeah actually i was wondering if there are any exercises i could do to help relieve it
+nurse: lastly your oxygen saturation is reading at 94 percent so i'll make a note of that as well
 
-nurse: yes there are definitely some gentle stretches and exercises i can recommend i’ll make a note to include those for you
+patient: thanks i appreciate you checking everything out
 
-patient: thank you that would be great
+nurse: no problem i'll also let the doctor know about the lightheadedness and chest tightness is there anything else you'd like to bring up today
 
-nurse: no problem i’ll also bring this up with your doctor to see if they have additional recommendations
+patient: no i think that covers it just hoping i can get my energy back soon
 
-patient: thank you i appreciate it
+nurse: we’ll work on it thank you for sharing and i’ll get this information updated
 
-nurse: youre welcome just one last thing is there anything else on your mind regarding your health or any other concerns
-
-patient: no i think that’s it just the back pain
-
-nurse: understood well let’s get that noted down and i’ll be back with the information on exercises shortly
 `,
       }),
     });
     const data = await response.json();
-    console.log(response);
     console.log(data);
   };
 
