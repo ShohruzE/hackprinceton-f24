@@ -39,6 +39,7 @@ nurse: we’ll work on it thank you for sharing and i’ll get this information 
       }),
     });
     const data = await response.json();
+    console.log(response);
     console.log(data);
   };
 
