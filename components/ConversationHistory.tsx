@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const conversations = [
@@ -46,11 +47,6 @@ const conversations = [
 ];
 
 export default function PatientConversationTable() {
-  const handleViewHistory = (patientName: string) => {
-    // This function would be implemented to navigate to the patient's history page
-    console.log(`Viewing conversation history for ${patientName}`);
-  };
-
   return (
     <Table className="bg-white rounded-md">
       <TableCaption>Patient Conversation Summaries</TableCaption>
@@ -71,15 +67,12 @@ export default function PatientConversationTable() {
             <TableCell>{conversation.summary}</TableCell>
             <TableCell>{conversation.nurseConfirmed ? "Yes" : "No"}</TableCell>
             <TableCell>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleViewHistory(conversation.patientName)}
-                className="w-full"
-              >
-                View History
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href={`/dashboard/conversations/${conversation.id}`}>
+                <Button variant="outline" size="sm" className="w-full">
+                  View History
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </TableCell>
           </TableRow>
         ))}
