@@ -85,10 +85,12 @@ export default function PatientConversationTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {conversations.map((conversation) => (
+              {filteredPatients.map((conversation) => (
                 <TableRow key={conversation.id}>
                   <TableCell className="font-medium">
-                    {conversation.patientName}
+                    <Link href={`/dashboard/conversations/${conversation.id}`}>
+                      {conversation.patientName}
+                    </Link>
                   </TableCell>
                   <TableCell>{conversation.summary}</TableCell>
                   <TableCell>

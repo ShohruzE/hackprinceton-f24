@@ -84,19 +84,27 @@ export default function PatientsPage() {
                 <TableHead>First Name</TableHead>
                 <TableHead>Last Name</TableHead>
                 <TableHead>Age</TableHead>
-                <TableHead>Date of Birth</TableHead>
+                <TableHead>Date of Birth (YY-MM-DD)</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredPatients.map((patient) => (
                 <TableRow key={patient.id}>
-                  <TableCell>{patient.firstName}</TableCell>
-                  <TableCell>{patient.lastName}</TableCell>
+                  <TableCell>
+                    <Link href={`/dashboard/patients/${patient.id}`}>
+                      {patient.firstName}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/dashboard/patients/${patient.id}`}>
+                      {patient.lastName}
+                    </Link>
+                  </TableCell>
                   <TableCell>{patient.age}</TableCell>
                   <TableCell>{patient.dateOfBirth}</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/patients/${patient.id}`} passHref>
+                    <Link href={`/dashboard/patients/${patient.id}`} passHref>
                       <Button variant="outline" size="sm">
                         See More
                       </Button>
