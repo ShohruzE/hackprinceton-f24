@@ -1,5 +1,3 @@
-"use client";
-
 import ConversationHistory from "@/components/ConversationHistory";
 
 export default function ConversationsPage() {

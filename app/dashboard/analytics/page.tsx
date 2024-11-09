@@ -1,50 +1,91 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
+import * as React from "react";
+import { addDays, format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { cn } from "@/lib/utils"
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+} from "@/components/ui/popover";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 // Mock data for vital signs
 const mockData = [
-  { date: "2023-05-01", bloodPressure: "120/80", heartRate: 72, oxygenSaturation: 98 },
-  { date: "2023-05-02", bloodPressure: "118/78", heartRate: 70, oxygenSaturation: 97 },
-  { date: "2023-05-03", bloodPressure: "122/82", heartRate: 75, oxygenSaturation: 99 },
-  { date: "2023-05-04", bloodPressure: "121/81", heartRate: 73, oxygenSaturation: 98 },
-  { date: "2023-05-05", bloodPressure: "119/79", heartRate: 71, oxygenSaturation: 97 },
-  { date: "2023-05-06", bloodPressure: "120/80", heartRate: 72, oxygenSaturation: 98 },
-  { date: "2023-05-07", bloodPressure: "118/78", heartRate: 70, oxygenSaturation: 99 },
-]
+  {
+    date: "2023-05-01",
+    bloodPressure: "120/80",
+    heartRate: 72,
+    oxygenSaturation: 98,
+  },
+  {
+    date: "2023-05-02",
+    bloodPressure: "118/78",
+    heartRate: 70,
+    oxygenSaturation: 97,
+  },
+  {
+    date: "2023-05-03",
+    bloodPressure: "122/82",
+    heartRate: 75,
+    oxygenSaturation: 99,
+  },
+  {
+    date: "2023-05-04",
+    bloodPressure: "121/81",
+    heartRate: 73,
+    oxygenSaturation: 98,
+  },
+  {
+    date: "2023-05-05",
+    bloodPressure: "119/79",
+    heartRate: 71,
+    oxygenSaturation: 97,
+  },
+  {
+    date: "2023-05-06",
+    bloodPressure: "120/80",
+    heartRate: 72,
+    oxygenSaturation: 98,
+  },
+  {
+    date: "2023-05-07",
+    bloodPressure: "118/78",
+    heartRate: 70,
+    oxygenSaturation: 99,
+  },
+];
 
 export default function PatientVitalsAnalytics({ patientName = "John Doe" }) {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
     to: new Date(),
-  })
+  });
 
   return (
-    <Card className="w-full max-w-4xl mx-auto min-h-screen">
+    <Card className="w-full min-h-screen">
       <CardHeader>
         <CardTitle>Vital Signs Analytics for {patientName}</CardTitle>
-        <CardDescription>Track changes in patient's vital signs over time</CardDescription>
+        <CardDescription>
+          Track changes in patient's vital signs over time
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center mb-4">
@@ -113,13 +154,17 @@ export default function PatientVitalsAnalytics({ patientName = "John Doe" }) {
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Line
                     type="monotone"
-                    dataKey={(data) => parseInt(data.bloodPressure.split('/')[0])}
+                    dataKey={(data) =>
+                      parseInt(data.bloodPressure.split("/")[0])
+                    }
                     stroke="var(--color-systolic)"
                     name="Systolic"
                   />
                   <Line
                     type="monotone"
-                    dataKey={(data) => parseInt(data.bloodPressure.split('/')[1])}
+                    dataKey={(data) =>
+                      parseInt(data.bloodPressure.split("/")[1])
+                    }
                     stroke="var(--color-diastolic)"
                     name="Diastolic"
                   />
@@ -194,5 +239,5 @@ export default function PatientVitalsAnalytics({ patientName = "John Doe" }) {
         </Card>
       </CardContent>
     </Card>
-  )
+  );
 }
