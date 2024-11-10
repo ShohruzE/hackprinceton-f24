@@ -6,7 +6,7 @@ import { NextResponse, NextRequest } from "next/server";
 export async function GET(){
     try {
         await dbConnect()
-        const patients = patientCollection.find().toArray()
+        const patients = await patientCollection.find().toArray()
         console.log(patients)
         return NextResponse.json({ message: "Retrieved all patients"})
     } catch(error){
@@ -24,6 +24,7 @@ export async function POST(request: NextRequest){
             first_name: data.first_name,
             last_name: data.last_name,
             age: data.age,
+            date_of_birth: data.date_of_birth,
             blood_type: data.blood_type,
             allergies: data.allergies,
             blood_pressure: [{
@@ -52,4 +53,8 @@ export async function POST(request: NextRequest){
     } catch (error) {
         return NextResponse.json({ error: error })
     }
+}
+
+export async function PUT(request: NextRequest) {
+    
 }
