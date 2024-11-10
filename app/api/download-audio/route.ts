@@ -7,7 +7,7 @@ const openai = new OpenAI({
   apiKey: String(process.env.OPENAI_KEY),
 });
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   const reader = req.body?.getReader();
   const chunks: Uint8Array[] = [];
 
