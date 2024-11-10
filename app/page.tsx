@@ -2,10 +2,13 @@ import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Clock, Heart, MessageSquare, Shield } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen justify-start">
+      <Navbar />
       <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
@@ -118,6 +121,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
