@@ -50,5 +50,5 @@ export async function POST(req: Request) {
   });
   console.log(completion);
 
-  return NextResponse.json(completion);
+  return NextResponse.json(completion.choices[0].message.parsed);
 }
