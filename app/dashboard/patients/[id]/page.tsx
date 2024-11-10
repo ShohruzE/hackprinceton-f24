@@ -1,4 +1,7 @@
-import React from "react";
+'use client'
+
+import React, { use, useEffect, useState } from "react";
+import { useRouter, useParams } from 'next/navigation'
 import { Bell, ChevronDown, Mic } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -12,8 +15,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Patient } from "@/lib/db/schemas/Patient";
+import { patientCollection } from "@/lib/db/dbConnect";
+import { MongoClient, ObjectId } from "mongodb";
 
 export default function individualPatient() {
+  const [data, setData] = useState<Patient | undefined>()
+  const router = useRouter()
+  const {id} = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`/api/patients?patient_id=${id}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      setData(data);
+      console.log(data)
+      console.log(data.blood_pressure[0].systolic,data.blood_pressure[0].diastolic )
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="flex">
       {/* Main Content */}
@@ -46,21 +70,21 @@ export default function individualPatient() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Patient Information</CardTitle>
-              <CardDescription>John Smith - Room 302</CardDescription>
+              <CardDescription>{data?.first_name + " " + data?.last_name} - Room {data?.room_bed_number} </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Age</Label>
-                  <Input value="45" readOnly />
+                  <Input value={data?.age} readOnly />
                 </div>
                 <div>
                   <Label>Blood Type</Label>
-                  <Input value="A+" readOnly />
+                  <Input value={data?.blood_type} readOnly />
                 </div>
                 <div>
                   <Label>Allergies</Label>
-                  <Input value="Penicillin" readOnly />
+                  <Input value={data?.allergies} readOnly />
                 </div>
                 <div>
                   <Label>Primary Condition</Label>
@@ -113,19 +137,19 @@ export default function individualPatient() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
                       <Label>Blood Pressure</Label>
-                      <Input value="120/80 mmHg" readOnly />
+                      <Input value={data?.blood_pressure[0].systolic + "/" + data?.blood_pressure[0].diastolic + "mmHg"} readOnly />
                     </div>
                     <div>
                       <Label>Heart Rate</Label>
-                      <Input value="72 bpm" readOnly />
+                      <Input value={data?.heart_rate} readOnly />
                     </div>
                     <div>
                       <Label>Temperature</Label>
-                      <Input value="98.6°F" readOnly />
+                      <Input value={data?.temperature[0].value} readOnly />
                     </div>
                     <div>
                       <Label>Oxygen Saturation</Label>
-                      <Input value="98%" readOnly />
+                      <Input value={data?.oxygen_saturation[0].value} readOnly />
                     </div>
                   </div>
                 </CardContent>
