@@ -1,13 +1,42 @@
 import { dbConnect } from "@/lib/db/dbConnect";
-import { hospitalDB } from "@/lib/db/dbConnect";
 import { nurseCollection } from "@/lib/db/dbConnect";
-import { NextResponse } from "next/server";
+import { patientCollection } from "@/lib/db/dbConnect";
+import { Patient } from "@/lib/db/schemas/Patient";
+import { ObjectId } from "mongodb";
+import { NextRequest, NextResponse } from "next/server";
+import path from "path";
 
-export async function GET(){
+interface PatientInfo {
+    first_name: string;
+    last_name: string;
+    age: number;
+    date_of_birth: string,
+}
+
+export async function GET(request: NextRequest){
     try {
         await dbConnect()
-        const nurses = nurseCollection.find()
-        return NextResponse.json(nurses)
+        const url_object = new URL(request.url)
+        const id = url_object.searchParams.get("nurse_id")
+        const nurse = {...await nurseCollection.findOne({ nurse_id: id! })}
+
+        let patientList: PatientInfo[] = []
+        if (nurse.patients?.length != null){
+            for(let i = 0; i < nurse.patients?.length; i++) {
+                const patient = await patientCollection.findOne({ _id: new ObjectId(nurse.patients[i]) })
+                if(patient){
+                    patientList.push({
+                        first_name: patient?.first_name,
+                        last_name: patient?.last_name,
+                        age: patient?.age,
+                        date_of_birth: patient?.date_of_birth,
+                    })
+                }
+            }
+        }
+        console.log(patientList)
+
+        return NextResponse.json({ patientList })
     } catch(error) {
         return NextResponse.json({ error: "error getting nurses" })
     }
