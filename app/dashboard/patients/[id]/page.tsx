@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const individualPatient = () => {
+export default function individualPatient() {
   return (
     <div className="flex">
       {/* Main Content */}
@@ -150,6 +150,4 @@ const individualPatient = () => {
       </main>
     </div>
   );
-};
-
-export default individualPatient;
+}
