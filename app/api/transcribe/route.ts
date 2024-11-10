@@ -1,69 +1,40 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
-import ffmpeg from "fluent-ffmpeg";
-import { OpenAI } from "openai";
 
-const openai = new OpenAI({
-  apiKey: String(process.env.OPENAI_KEY),
-});
-
-export async function POST(request: NextRequest) {
-  if (!request.body) {
-    return NextResponse.json(
-      { error: "Request body is null" },
-      { status: 400 }
-    );
-  }
-
-  const { filePath } = await request.json();
-  console.log(filePath);
-
-  // Check if the file exists and is accessible
-  if (!fs.existsSync(filePath)) {
-    return NextResponse.json({ error: "File does not exist" }, { status: 400 });
-  }
-
-  const convertedFilePath = path.join(
-    process.cwd(),
-    "tmp",
-    "converted_audio.wav"
-  );
-
+export async function POST(req: NextRequest) {
   try {
-    console.log("converting file");
-    // Convert the audio file to WAV format using ffmpeg
-    await new Promise((resolve, reject) => {
-      ffmpeg(filePath)
-        .toFormat("wav")
-        .on("end", resolve)
-        .on("error", reject)
-        .save(convertedFilePath);
-    });
+    const formData = await req.formData();
+    const file = formData.get("audio") as File;
 
-    console.log("file done converting");
+    if (!file) {
+      console.error("No audio file provided");
+      return NextResponse.json(
+        { error: "No audio file provided" },
+        { status: 400 }
+      );
+    }
+
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
+
+    const filePath = path.join(process.cwd(), "tmp", "testconvo.m4a");
+    console.log("File path:", filePath);
 
     const transcription = await openai.audio.transcriptions.create({
-      file: fs.createReadStream(convertedFilePath),
+      file: fs.createReadStream(filePath),
       model: "whisper-1",
+      response_format: "text",
     });
 
-    console.log(transcription);
-
-    return NextResponse.json({
-      message: "Transcription successful",
-      transcription,
-    });
+    console.log("Transcription:", transcription);
+    return NextResponse.json({ text: transcription });
   } catch (error) {
-    console.error("Error during transcription:", error);
+    console.error("Error processing the request:", error);
     return NextResponse.json(
-      { error: "Failed to transcribe audio" },
+      { error: "Error processing the request" },
       { status: 500 }
     );
-  } finally {
-    // Clean up the converted file
-    if (fs.existsSync(convertedFilePath)) {
-      fs.unlinkSync(convertedFilePath);
-    }
   }
 }

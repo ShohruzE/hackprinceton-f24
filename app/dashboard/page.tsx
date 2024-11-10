@@ -1,13 +1,22 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { string } from "zod";
 
 export default function DashboardHomePage() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [transcription, setTranscription] = useState("");
+  const [summary, setSummary] = useState<{
+    conversation_summary: string;
+    heart_rate: number;
+    temperature: number;
+    oxygen_saturation: number;
+    bloodpressure: { systolic: string; diastolic: string }[];
+  } | null>(null);
 
   const record = async () => {
     if (!isRecording) {
@@ -51,77 +60,48 @@ export default function DashboardHomePage() {
     }
   };
 
-  const transcribeAudio = async () => {
-    if (audioBlob) {
-      const response = await fetch("/api/transcribe", {
-        method: "POST",
-        body: JSON.stringify({
-          filePath: "tmp/audio.mp3",
-        }),
-      });
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-      } else {
-        console.error("Failed to transcribe audio");
-      }
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch("/api/transcribe", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setTranscription(data.text);
+    } else {
+      console.error("Failed to transcribe audio");
     }
   };
 
   const createSummary = async () => {
+    console.log("Creating summary for transcription:", transcription);
     const response = await fetch("/api/summary", {
       method: "POST",
       body: JSON.stringify({
-        text: `nurse: good morning how are you feeling today
-
-                patient: good morning ive been feeling a little lightheaded and out of breath
-
-                nurse: i see lets check a few things can you tell me if youve had any pain or discomfort
-
-                patient: just a bit of chest tightness nothing severe but it’s noticeable especially when i move around a lot
-
-                nurse: understood and just for documentation i’m going to note your vitals i see here that your blood pressure is 120 over 80
-
-                patient: yes that was from this morning when they checked me in
-
-                nurse: alright and your heart rate is currently at 85 bpm do you remember what it was earlier
-
-                patient: no but i remember them mentioning it was around 80 bpm
-
-                nurse: ok and your temperature is normal at 98.6 degrees
-
-                patient: thats good to know
-
-                nurse: lastly your oxygen saturation is reading at 94 percent so i'll make a note of that as well
-
-                patient: thanks i appreciate you checking everything out
-
-                nurse: no problem i'll also let the doctor know about the lightheadedness and chest tightness is there anything else you'd like to bring up today
-
-                patient: no i think that covers it just hoping i can get my energy back soon
-
-                nurse: we’ll work on it thank you for sharing and i’ll get this information updated in your chart`,
+        text: transcription,
       }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const data = await response.json();
+    setSummary(data);
     console.log(data);
   };
+  useEffect(() => {
+    if (summary) {
+      console.log("Summary:", summary.conversation_summary);
+    }
+  }, [summary]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen justify-start">
       <h1>Dashboard Home Page</h1>
-      <div>
-        <Button onClick={record}>
-          {isRecording ? "Stop Recording" : "Start Recording"}
-        </Button>
-        {audioBlob && (
-          <audio controls src={URL.createObjectURL(audioBlob)}></audio>
-        )}
-        {audioBlob && <Button onClick={downloadAudio}>Download Audio</Button>}
-        <Button onClick={transcribeAudio}>Transcribe</Button>
-        <Button onClick={createSummary}>Create Summary</Button>
-      </div>
+      <div></div>
     </div>
   );
 }
