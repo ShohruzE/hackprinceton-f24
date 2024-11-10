@@ -39,13 +39,14 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-12 lg:mt-0 lg:col-span-6">
-              <div className="bg-white rounded-2xl shadow-xl p-8">
+              <div className="bg-white rounded-2xl shadow-xl p-6">
                 <Image
-                  src="/api/placeholder/600/400"
+                  src="/echohealth.gif"
                   alt="EchoHealth Dashboard Preview"
                   width={600}
                   height={400}
-                  className="rounded-lg w-full"
+                  className="rounded-2xl w-full"
+                  unoptimized
                 />
               </div>
             </div>
