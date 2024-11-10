@@ -5,8 +5,9 @@ import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import DashboardHeader from "@/components/DashboardHeader"
 import {
   Card,
   CardContent,
@@ -108,26 +109,22 @@ export default function PatientVitalsAnalytics({ patientName = "John Doe" }) {
                       {format(dateRange.to, "LLL dd, y")}
                     </>
                   ) : (
-                    format(dateRange.from, "LLL dd, y")
-                  )
-                ) : (
-                  <span>Pick a date range</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="end">
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={dateRange?.from}
-                selected={dateRange}
-                onSelect={setDateRange}
-                numberOfMonths={2}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-
+                    <span>Pick a date range</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={dateRange?.from}
+                  selected={dateRange}
+                  onSelect={setDateRange}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         {/* Blood Pressure Chart */}
         <Card className="mb-6">
           <CardHeader>
@@ -174,38 +171,37 @@ export default function PatientVitalsAnalytics({ patientName = "John Doe" }) {
           </CardContent>
         </Card>
 
-        {/* Heart Rate Chart */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Heart Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              config={{
-                heartRate: {
-                  label: "Heart Rate",
-                  color: "hsl(var(--chart-3))",
-                },
-              }}
-              className="h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={mockData}>
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line
-                    type="monotone"
-                    dataKey="heartRate"
-                    stroke="var(--color-heartRate)"
-                    name="Heart Rate"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
+          {/* Heart Rate Chart */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Heart Rate</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer
+                config={{
+                  heartRate: {
+                    label: "Heart Rate",
+                    color: "hsl(var(--chart-3))",
+                  },
+                }}
+                className="h-[300px]"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={mockData}>
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Line
+                      type="monotone"
+                      dataKey="heartRate"
+                      stroke="var(--color-heartRate)"
+                      name="Heart Rate"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
         {/* Oxygen Saturation Chart */}
         <Card>
           <CardHeader>
