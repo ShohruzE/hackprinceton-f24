@@ -1,16 +1,19 @@
 import { dbConnect } from "@/lib/db/dbConnect";
 import { patientCollection } from "@/lib/db/dbConnect";
 import { Patient } from "@/lib/db/schemas/Patient";
+import { ObjectId } from "mongodb";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(){
-    try {
+export async function GET(request: NextRequest){
+    try { 
         await dbConnect()
-        const patients = await patientCollection.find().toArray()
-        console.log(patients)
-        return NextResponse.json({ message: "Retrieved all patients"})
-    } catch(error){
-        return NextResponse.json({ error: error })
+        const url_object = new URL(request.url)
+        const id = url_object.searchParams.get("patient_id");
+        const patient = { ...(await patientCollection.findOne({  _id: new ObjectId(id!) })) };
+        console.log(patient)
+        return NextResponse.json({ ...patient })
+    } catch(error) {
+        return NextResponse.json({ error: "error getting the patient" })
     }
 }
 
