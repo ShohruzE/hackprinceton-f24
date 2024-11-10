@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Bell, ChevronDown, LogOut } from 'lucide-react'
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Bell, ChevronDown, LogOut } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect } from "react";
@@ -15,37 +15,38 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
-  username: string
-  pfp: string
+  username: string;
+  pfp: string;
 }
 
 export default function DashboardHeader() {
+  const [username, setUsername] = useState("");
+  const [pfp, setPfp] = useState("");
+  const router = useRouter();
 
-    const [username, setUsername] = useState('');
-    const [pfp, setPfp] = useState('');
-    const router = useRouter();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userName = user.displayName as string;
+        const initials = userName.slice(0, 2).toUpperCase();
+        setUsername(userName);
+        setPfp(initials);
+      }
+    });
+  }, []);
 
-    useEffect(() => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const userName = user.displayName as string;
-          const initials = userName.slice(0, 2).toUpperCase();
-          setUsername(userName);
-          setPfp(initials);
-        }
-      })
-    }, [])
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/");
+  };
 
-    const handleLogout = async () => {
-      await signOut(auth);
-      router.push('/');
-    }
-
-    return (
-      <header className="bg-white shadow-sm mb-4">
-      <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <h2 className="text-2xl font-semibold text-gray-800">Patient Dashboard</h2>
-        <div className="flex items-center">
+  return (
+    <header className="bg-white shadow-sm mb-4">
+      <div className="w-full mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center">
+        <h2 className="text-2xl font-semibold text-gray-800 justify-start">
+          Nurse Dashboard
+        </h2>
+        <div className="flex items-center ml-auto">
           <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5 text-gray-500" />
           </Button>
@@ -56,7 +57,9 @@ export default function DashboardHeader() {
                   <AvatarImage src={pfp} alt="Nurse" />
                   <AvatarFallback>{pfp}</AvatarFallback>
                 </Avatar>
-                <span className="ml-2 text-sm font-medium text-gray-700">{username}</span>
+                <span className="ml-2 text-sm font-medium text-gray-700">
+                  {username}
+                </span>
                 <ChevronDown className="ml-1 h-4 w-4 text-gray-500" />
               </div>
             </DropdownMenuTrigger>
@@ -70,5 +73,5 @@ export default function DashboardHeader() {
         </div>
       </div>
     </header>
-    )
+  );
 }
