@@ -1,7 +1,11 @@
+import ConversationHistory from "@/components/ConversationHistory";
+import DashboardHeader from "@/components/DashboardHeader";
+
 export default function ConversationsPage() {
   return (
     <div className="">
-      <h1>Conversations Page</h1>
+      <DashboardHeader></DashboardHeader>
+      <ConversationHistory />
     </div>
   );
 }

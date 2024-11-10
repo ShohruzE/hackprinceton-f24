@@ -23,6 +23,7 @@ export interface Patient {
     first_name: string;
     last_name: string
     age: number;
+    date_of_birth: string,
     blood_type: string;
     allergies: Array<string>;
     blood_pressure: BloodPressure[];
