@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import DashboardHeader from '@/components/DashboardHeader'
 
 export default function PatientsPage() {
   // const router = useRouter();
