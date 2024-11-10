@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb"
 import { Patient } from './Patient'
-
 import { auth } from "@/lib/firebase"
 import { onAuthStateChanged } from "firebase/auth";
 
