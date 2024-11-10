@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import DashboardHeader from '@/components/DashboardHeader'
 
 export default function Dashboard() {
 
@@ -16,25 +17,9 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         {/* Header */}
-        <header className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <h2 className="text-2xl font-semibold text-gray-800">Patient Dashboard</h2>
-            <div className="flex items-center">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5 text-gray-500" />
-              </Button>
-              <Avatar className="ml-4">
-                <AvatarImage src="/placeholder-user.jpg" alt="Nurse" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-              <span className="ml-2 text-sm font-medium text-gray-700">Jane Doe</span>
-              <ChevronDown className="ml-1 h-4 w-4 text-gray-500" />
-            </div>
-          </div>
-        </header>
-
+        <DashboardHeader></DashboardHeader>
         {/* Dashboard Content */}
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           {/* Patient Info Card */}
           <Card className="mb-6">
             <CardHeader>

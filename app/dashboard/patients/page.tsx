@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import DashboardHeader from '@/components/DashboardHeader'
 
 // Dummy data for patients
 const patients = [
@@ -24,51 +25,54 @@ export default function PatientsPage() {
   )
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle>Patients</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="mb-4">
-          <Input
-            type="text"
-            placeholder="Search patients..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-sm"
-          />
-        </div>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>First Name</TableHead>
-                <TableHead>Last Name</TableHead>
-                <TableHead>Age</TableHead>
-                <TableHead>Date of Birth</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPatients.map((patient) => (
-                <TableRow key={patient.id}>
-                  <TableCell>{patient.firstName}</TableCell>
-                  <TableCell>{patient.lastName}</TableCell>
-                  <TableCell>{patient.age}</TableCell>
-                  <TableCell>{patient.dateOfBirth}</TableCell>
-                  <TableCell className="text-right">
-                    <Link href={`/patients/${patient.id}`} passHref>
-                      <Button variant="outline" size="sm">
-                        See More
-                      </Button>
-                    </Link>
-                  </TableCell>
+    <div>
+      <DashboardHeader></DashboardHeader>
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader>
+          <CardTitle>Patients</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-4">
+            <Input
+              type="text"
+              placeholder="Search patients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="max-w-sm"
+            />
+          </div>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>First Name</TableHead>
+                  <TableHead>Last Name</TableHead>
+                  <TableHead>Age</TableHead>
+                  <TableHead>Date of Birth</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+              </TableHeader>
+              <TableBody>
+                {filteredPatients.map((patient) => (
+                  <TableRow key={patient.id}>
+                    <TableCell>{patient.firstName}</TableCell>
+                    <TableCell>{patient.lastName}</TableCell>
+                    <TableCell>{patient.age}</TableCell>
+                    <TableCell>{patient.dateOfBirth}</TableCell>
+                    <TableCell className="text-right">
+                      <Link href={`/patients/${patient.id}`} passHref>
+                        <Button variant="outline" size="sm">
+                          See More
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
