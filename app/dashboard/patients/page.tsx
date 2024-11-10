@@ -21,6 +21,7 @@ export default function PatientsPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
   const [patients, setPatients] = useState<
     {
       id: string;
@@ -33,23 +34,26 @@ export default function PatientsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`/api/nurses?nurse_id=${id}`, {
+      const response = await fetch('/api/nurses?nurse_id=kkVp3xEBQLPMxOPNRJK1NBRz6dS2', {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
       setPatients(data.patients);
+      console.log(data)
     };
     fetchData();
   }, []);
-
-  console.log("patients", patients);
 
   const filteredPatients = patients.filter((patient) =>
     `${patient.first_name} ${patient.last_name}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
+
+  const handleSeeMore = (patientId: string) => {
+    router.push(`/dashboard/patients/${patientId}`)
+  }
 
   return (
     <Card className="w-full mx-auto">
@@ -68,7 +72,6 @@ export default function PatientsPage() {
         </div>
         <div className="rounded-md border">
           <Table className="bg-white">
-            <TableCaption>Patient Information</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>First Name</TableHead>
@@ -80,7 +83,7 @@ export default function PatientsPage() {
             </TableHeader>
             <TableBody>
               {filteredPatients.map((patient) => (
-                <TableRow key="nurse_id=DSShJZjkxnV53tZeTlOAsfY3jJq2">
+                <TableRow key={`patient_id=${patient.id}`}>
                   <TableCell>
                     <Link href={`/dashboard/patients/${patient.id}`}>
                       {patient.first_name}
@@ -94,11 +97,9 @@ export default function PatientsPage() {
                   <TableCell>{patient.age}</TableCell>
                   <TableCell>{patient.date_of_birth}</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/dashboard/patients/${patient.id}`} passHref>
-                      <Button variant="outline" size="sm">
-                        See More
-                      </Button>
-                    </Link>
+                    <Button onClick={() => handleSeeMore(patient.id)} variant="outline" size="sm">
+                      See More
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

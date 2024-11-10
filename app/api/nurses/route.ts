@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 interface PatientInfo {
+  id: ObjectId;
   first_name: string;
   last_name: string;
   age: number;
@@ -26,6 +27,7 @@ export async function GET(request: NextRequest) {
         });
         if (patient) {
           patientList.push({
+            id: patient._id,
             first_name: patient?.first_name,
             last_name: patient?.last_name,
             age: patient?.age,
