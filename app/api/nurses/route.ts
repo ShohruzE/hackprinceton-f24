@@ -1,10 +1,8 @@
 import { dbConnect } from "@/lib/db/dbConnect";
 import { nurseCollection } from "@/lib/db/dbConnect";
 import { patientCollection } from "@/lib/db/dbConnect";
-import { Patient } from "@/lib/db/schemas/Patient";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
 
 interface PatientInfo {
   first_name: string;
@@ -20,7 +18,7 @@ export async function GET(request: NextRequest) {
     const id = url_object.searchParams.get("nurse_id");
     const nurse = { ...(await nurseCollection.findOne({ nurse_id: id! })) };
 
-    let patientList: PatientInfo[] = [];
+    const patientList: PatientInfo[] = [];
     if (nurse.patients?.length != null) {
       for (let i = 0; i < nurse.patients?.length; i++) {
         const patient = await patientCollection.findOne({
@@ -39,8 +37,8 @@ export async function GET(request: NextRequest) {
     console.log(patientList);
 
     return NextResponse.json({ patients: patientList });
-  } catch (error) {
-    return NextResponse.json({ error: "error getting nurses" });
+  } catch (errorMessage) {
+    return NextResponse.json({ error: "error getting nurses", errorMessage });
   }
 }
 
