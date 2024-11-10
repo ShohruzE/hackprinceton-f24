@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { Bell, ChevronDown, LogOut, Mic, Settings, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckCircle2, ClipboardList, User } from "lucide-react";
@@ -19,27 +18,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+
+import RecordingForm from "@/components/RecordingForm";
 
 export default function DashboardHomePage() {
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const [transcription, setTranscription] = useState("");
-  const [summary, setSummary] = useState<{
-    conversation_summary: String;
-    heart_rate: number;
-    temperature: number;
-    oxygen_saturation: number;
-    bloodpressure: { systolic: String; diastolic: String }[];
-  } | null>(null);
-
   const [username, setUsername] = useState("");
   const [pfp, setPfp] = useState("");
   const router = useRouter();
@@ -59,86 +41,6 @@ export default function DashboardHomePage() {
     await signOut(auth);
     router.push("/");
   };
-
-  const record = async () => {
-    if (!isRecording) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      mediaRecorderRef.current.start();
-
-      const audioChunks: Blob[] = [];
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        audioChunks.push(event.data);
-      };
-
-      mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
-        setAudioBlob(audioBlob);
-      };
-    } else {
-      mediaRecorderRef.current?.stop();
-    }
-
-    setIsRecording(!isRecording);
-  };
-
-  const downloadAudio = async () => {
-    if (audioBlob) {
-      const formData = new FormData();
-      formData.append("file", audioBlob, "recording.mp3");
-
-      const response = await fetch("/api/download-audio", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("File uploaded successfully:", data.path);
-        // Optionally, you can provide a link to download the file from the server
-      } else {
-        console.error("Failed to upload file");
-      }
-    }
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/transcribe", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      setTranscription(data.text);
-    } else {
-      console.error("Failed to transcribe audio");
-    }
-  };
-
-  const createSummary = async () => {
-    console.log("Creating summary for transcription:", transcription);
-    const response = await fetch("/api/summary", {
-      method: "POST",
-      body: JSON.stringify({
-        text: transcription,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setSummary(data);
-    console.log(data);
-  };
-  useEffect(() => {
-    if (summary) {
-      console.log("Summary:", summary.conversation_summary);
-    }
-  }, [summary]);
 
   return (
     <div className="flex h-screen">
@@ -280,10 +182,8 @@ export default function DashboardHomePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <Button className="w-full">Add New Patient</Button>
-                <Button className="w-full" variant="outline">
-                  Create Task
-                </Button>
+                {/* <Button className="w-full">Add New Patient</Button> */}
+                <RecordingForm />
                 <Button className="w-full" variant="secondary">
                   Write Note
                 </Button>
